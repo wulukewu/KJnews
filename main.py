@@ -9,7 +9,6 @@ import requests
 import datetime
 from google.oauth2.service_account import Credentials
 import gspread
-import discord
 import pandas as pd
 import os
 import json
