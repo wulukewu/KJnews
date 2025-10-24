@@ -8,7 +8,6 @@ selenium
 pandas
 gspread
 google-auth
-discord
 
 python-dotenv
 line-bot-sdk

@@ -20,9 +20,7 @@ import json
 line_notify_id = os.environ['LINE_NOTIFY_ID']
 group_id = os.environ['GROUP_ID']
 message_post_url = os.environ['MESSAGE_POST_URL']
-discord_token = os.environ['DISCORD_TOKEN']
-discord_guild_id = int(os.environ['DISCORD_GUILD_ID'])
-discord_channel_id = int(os.environ['DISCORD_CHANNEL_ID'])
+discord_webhook_url = os.environ['DISCORD_WEBHOOK_URL']
 sheet_key = os.environ['GOOGLE_SHEETS_KEY']
 gs_credentials = os.environ['GS_CREDENTIALS']
 service = Service(ChromeDriverManager().install())
@@ -149,20 +147,21 @@ def send_to_linebot(id, message, send_to_group=False):
     print(f"Response: {response.json()}")
 
 # Discord 發送
-def dc_send(message, token, guild_id, channel_id):
+def dc_send(message, webhook_url):
+    payload = {
+        "content": message
+    }
 
-    intents = discord.Intents.default()
-    client = discord.Client(intents=intents)
+    headers = {
+        "Content-Type": "application/json"
+    }
 
-    @client.event
-    async def on_ready():
-        print(f'We have logged in as {client.user}')
-        guild = discord.utils.get(client.guilds, id=guild_id)
-        channel = discord.utils.get(guild.channels, id=channel_id)
-        await channel.send(message)
-        await client.close()
-
-    client.run(token)
+    try:
+        response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+        response.raise_for_status()  # Raise an HTTPError for bad responses (4xx or 5xx)
+        print(f"Message sent successfully! Status Code: {response.status_code}")
+    except requests.exceptions.RequestException as err:
+        print(f"An error occurred: {err}")
 
 # Google Sheets 紀錄
 scope = ['https://www.googleapis.com/auth/spreadsheets']
@@ -334,7 +333,7 @@ def main():
             #   send_to_linebot(group_id, params_message, send_to_group=True)
 
             # 傳送至Discord
-            dc_send(params_message, discord_token, discord_guild_id, discord_channel_id)
+            dc_send(params_message, discord_webhook_url)
 
             # 儲存總覽訊息
             line_message_list.append(Process_Message(category, date, title, unit, link))
