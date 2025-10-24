@@ -29,8 +29,6 @@ jobs:
           LINE_NOTIFY_ID: ${{ secrets.LINE_NOTIFY_ID }}
           GROUP_ID: ${{ secrets.GROUP_ID }}
           MESSAGE_POST_URL: ${{ secrets.MESSAGE_POST_URL }}
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-          DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
-          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GOOGLE_SHEETS_KEY: ${{ secrets.GOOGLE_SHEETS_KEY }}
           GS_CREDENTIALS: ${{ secrets.GS_CREDENTIALS }}
